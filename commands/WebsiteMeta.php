@@ -36,7 +36,7 @@ class WebsiteMeta extends Command
      * @var arr
      */
     protected $siteMeta = [
-        ['url', 'title', 'description',],
+        ['url', 'title', 'description', 'keywords'],
     ];
 
     /**
@@ -146,13 +146,19 @@ class WebsiteMeta extends Command
             if (!preg_match('/\.[a-zA-Z]{2,}$/', $pageUrl)) {
 
                 // setup the defaults in case some parsing fails
-                $pageTitle = 'unknown';
-                $pageDesc = 'unknown';
+                $pageTitle = 'none';
+                $pageDesc = 'none';
+                $pageKeywords = 'none';
 
                 // try to get the metadata for the page
                 $meta = get_meta_tags($pageUrl);
+
                 if (isset($meta['description'])) {
                     $pageDesc = $meta['description'];
+                }
+
+                if (isset($meta['keywords'])) {
+                    $pageKeywords = $meta['keywords'];
                 }
 
                 // try to get the title of the page, but try to ignore any
@@ -166,7 +172,7 @@ class WebsiteMeta extends Command
 
                 // if we didn't get it from the DOM reader, try and parse
                 // it the old fashioned way
-                if ($pageTitle == 'unknown') {
+                if ($pageTitle == 'none') {
 
                     $pageContents = file_get_contents($pageUrl);
                     if (strlen($pageContents) > 0) {
@@ -190,6 +196,7 @@ class WebsiteMeta extends Command
                 $pageUrl,
                 $pageTitle,
                 $pageDesc,
+                $pageKeywords,
             ];
 
         }
